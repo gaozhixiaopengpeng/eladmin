@@ -31,7 +31,10 @@ public class ZipUtils {
 			ZipEntry ze = zis.getNextEntry();
 			while (ze != null) {
 				String fileName = ze.getName();
-				File newFile = new File(outputFolder + File.separator + fileName);
+				File newFile = new File(outputFolder,fileName);
+      if (!newFile.toPath().normalize().startsWith(outputFolder)) {
+         throw new IOException("Bad zip entry");
+      }
 				System.out.println("file unzip : " + newFile.getAbsoluteFile());
 				//大部分网络上的源码，这里没有判断子目录
 				if (ze.isDirectory()) {
@@ -63,6 +66,10 @@ public class ZipUtils {
 			while (entry != null) {
 
 				File file = new File(out, entry.getName());
+
+      if (!file.toPath().normalize().startsWith(out)) {
+         throw new IOException("Bad zip entry");
+      }
 
 				if (entry.isDirectory()) {
 					file.mkdirs();
